@@ -3,9 +3,8 @@ class ProductsController < ApplicationController
 
   # GET /products
   def index
-    @products = Product.all
-
-    render json: @products
+    @products = Product.includes(:category).all
+    render json: @products.to_json(include: :category)
   end
 
   # GET /products/1
