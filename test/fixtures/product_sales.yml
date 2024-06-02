@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  totalCostoVentaProducto: 1.5
+  cantVentaProducto: 1
+  subTotalVentaProducto: 1.5
+
+two:
+  totalCostoVentaProducto: 1.5
+  cantVentaProducto: 1
+  subTotalVentaProducto: 1.5
