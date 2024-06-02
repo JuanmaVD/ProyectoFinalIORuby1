@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_02_170604) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_02_173801) do
+  create_table "categories", force: :cascade do |t|
+    t.string "nombreCategoria"
+    t.string "descripcionCategoria"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "clients", force: :cascade do |t|
     t.string "nombreCliente"
     t.string "apellidoCliente"
@@ -20,14 +27,36 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_170604) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "demands", force: :cascade do |t|
+    t.integer "demandaReal"
+    t.integer "demandaProyectada"
+    t.integer "product_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_demands_on_product_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "nombreProducto"
+    t.string "descripcionProducto"
+    t.float "precioProveedorProducto"
+    t.float "precioVentaProducto"
+    t.integer "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_products_on_category_id"
+  end
+
   create_table "sales", force: :cascade do |t|
     t.float "totalCostoVenta"
     t.string "estadoVenta"
-    t.integer "client_id"
+    t.integer "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_sales_on_client_id"
   end
 
+  add_foreign_key "demands", "products"
+  add_foreign_key "products", "categories"
   add_foreign_key "sales", "clients"
 end
