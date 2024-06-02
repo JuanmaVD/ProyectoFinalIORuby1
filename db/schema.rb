@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
   create_table "categories", force: :cascade do |t|
     t.string "nombreCategoria"
     t.string "descripcionCategoria"
@@ -36,6 +36,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
     t.index ["product_id"], name: "index_demands_on_product_id"
   end
 
+  create_table "product_purchase_orders", force: :cascade do |t|
+    t.float "totalCostoOrdenCompraProducto"
+    t.integer "cantOrdenCompraProducto"
+    t.float "subTotalCostoOrdenCompraProducto"
+    t.integer "product_id"
+    t.integer "purchase_order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_purchase_orders_on_product_id"
+    t.index ["purchase_order_id"], name: "index_product_purchase_orders_on_purchase_order_id"
+  end
+
   create_table "product_sales", force: :cascade do |t|
     t.float "totalCostoVentaProducto"
     t.integer "cantVentaProducto"
@@ -59,6 +71,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
+  create_table "providers", force: :cascade do |t|
+    t.string "nombreProveedor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "purchase_orders", force: :cascade do |t|
+    t.float "totalCostoOrdenCompra"
+    t.string "estadoOrdenCompra"
+    t.datetime "fechaEstimadaEntrega"
+    t.integer "provider_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider_id"], name: "index_purchase_orders_on_provider_id"
+  end
+
   create_table "sales", force: :cascade do |t|
     t.float "totalCostoVenta"
     t.string "estadoVenta"
@@ -69,8 +97,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
   end
 
   add_foreign_key "demands", "products"
+  add_foreign_key "product_purchase_orders", "products"
+  add_foreign_key "product_purchase_orders", "purchase_orders"
   add_foreign_key "product_sales", "products"
   add_foreign_key "product_sales", "sales"
   add_foreign_key "products", "categories"
+  add_foreign_key "purchase_orders", "providers"
   add_foreign_key "sales", "clients"
 end

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  totalCostoOrdenCompra: 1.5
+  estadoOrdenCompra: MyString
+  fechaEstimadaEntrega: 2024-06-02 16:41:04
+
+two:
+  totalCostoOrdenCompra: 1.5
+  estadoOrdenCompra: MyString
+  fechaEstimadaEntrega: 2024-06-02 16:41:04
