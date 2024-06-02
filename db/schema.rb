@@ -41,8 +41,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
     t.integer "cantVentaProducto"
     t.float "subTotalVentaProducto"
     t.integer "sale_id"
+    t.integer "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_sales_on_product_id"
     t.index ["sale_id"], name: "index_product_sales_on_sale_id"
   end
 
@@ -67,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_175134) do
   end
 
   add_foreign_key "demands", "products"
+  add_foreign_key "product_sales", "products"
   add_foreign_key "product_sales", "sales"
   add_foreign_key "products", "categories"
   add_foreign_key "sales", "clients"
