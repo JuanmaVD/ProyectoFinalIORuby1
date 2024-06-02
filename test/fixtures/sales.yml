@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  estadoVenta: MyString
   totalCostoVenta: 1.5
+  estadoVenta: MyString
 
 two:
-  estadoVenta: MyString
   totalCostoVenta: 1.5
+  estadoVenta: MyString

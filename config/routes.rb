@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :sells
+  resources :sales
   resources :clients
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
