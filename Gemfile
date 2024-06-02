@@ -45,3 +45,7 @@ group :development do
   # gem "spring"
 end
 
+gem 'amazing_print'
+gem 'solargraph'
+gem 'rack-cors'
+
