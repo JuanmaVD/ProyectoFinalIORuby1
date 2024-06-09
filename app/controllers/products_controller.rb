@@ -9,7 +9,8 @@ class ProductsController < ApplicationController
 
   # GET /products/1
   def show
-    render json: @product
+    @product = Product.includes(:demands).find(params[:id])
+    render json: @product.to_json(include: :demands)
   end
 
   # POST /products
