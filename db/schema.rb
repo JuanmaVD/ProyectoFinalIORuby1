@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
     t.string "descripcionProducto"
     t.float "precioProveedorProducto"
     t.float "precioVentaProducto"
+    t.integer "stock"
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
