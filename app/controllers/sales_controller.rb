@@ -9,7 +9,8 @@ class SalesController < ApplicationController
 
   # GET /sales/1
   def show
-    render json: @sale
+    @sale = Sale.includes(:client, product_sales: :product).find(params[:id])
+    render json: @sale.to_json(include: { client: {}, product_sales: { include: :product } })
   end
 
   # POST /sales
