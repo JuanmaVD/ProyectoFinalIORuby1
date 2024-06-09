@@ -1,11 +1,10 @@
 class SalesController < ApplicationController
-  before_action :set_sale, only: %i[ show update destroy ]
+  before_action :set_sale, only: %i[ show update destroy]
 
-  # GET /sales
+  # GET /products
   def index
-    @sales = Sale.all
-
-    render json: @sales
+    @sales = Sale.includes(:client, product_sales: :product).all
+    render json: @sales.to_json(include: { client: {}, product_sales: { include: :product } })
   end
 
   # GET /sales/1
