@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   resources :products
   resources :sales
   resources :clients
+  resources :products do
+    post 'calculate_and_create', to: 'demands#calculate_and_create'
+  end
   
   get "up" => "rails/health#show", as: :rails_health_check
 

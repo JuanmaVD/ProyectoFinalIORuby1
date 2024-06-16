@@ -38,6 +38,35 @@ class DemandsController < ApplicationController
     @demand.destroy!
   end
 
+  #Metodo para calcular Demanda PPM y PPMP
+  # app/controllers/demands_controller.rb
+  def calculate_and_create
+    product = Product.find(params[:product_id])
+    n = params[:n].to_i
+
+    # Obtener las últimas N demandas para el producto
+    last_n_demands = product.demands.order(created_at: :desc).limit(n)
+
+    # Calcular demandaPPM (promedio de las demandas)
+    demandaProyectadaPM = last_n_demands.average(:demandaReal)
+
+    # Calcular demandaPPMP (promedio ponderado)
+    total_weight = (1..n).sum
+    weighted_sum = last_n_demands.each_with_index.reduce(0) do |sum, (demand, index)|
+      sum + (demand.demandaReal * (n - index))
+    end
+    demandaProyectadaPMP = weighted_sum / total_weight.to_f
+
+    # Crear una nueva instancia de Demand con los valores calculados
+    new_demand = product.demands.build(demandaProyectadaPM: demandaProyectadaPM, demandaProyectadaPMP: demandaProyectadaPMP)
+
+    if new_demand.save
+      render json: new_demand, status: :created
+    else
+      render json: new_demand.errors, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_demand
@@ -46,6 +75,6 @@ class DemandsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def demand_params
-      params.require(:demand).permit(:demandaReal, :demandaProyectada, :product_id)
+      params.require(:demand).permit(:demandaReal, :demandaProyectada, :product_id, :n)
     end
 end

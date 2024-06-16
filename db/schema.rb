@@ -29,7 +29,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
 
   create_table "demands", force: :cascade do |t|
     t.integer "demandaReal"
-    t.integer "demandaProyectada"
+    t.integer "demandaProyectadaPM"
+    t.integer "demandaProyectadaPMP"
     t.integer "product_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -66,6 +67,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
     t.float "precioProveedorProducto"
     t.float "precioVentaProducto"
     t.integer "stock"
+    t.integer "stockEmergencia"
+    t.integer "puntoPedido"
+    t.integer "demandaPM"
+    t.integer "demandaPMP"
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
