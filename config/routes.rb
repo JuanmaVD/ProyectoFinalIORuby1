@@ -8,10 +8,11 @@ Rails.application.routes.draw do
   resources :products
   resources :sales
   resources :clients
-  resources :products do
-    post 'calculate_and_create', to: 'demands#calculate_and_create'
-  end
-  
+  resources :products 
+  #Llamada metodo PM
+  post 'demands/calcular_demanda_promedio', to: 'demands#calcular_demanda_promedio'
+  #Llamada metodo PMP
+  post 'demands/calcular_demanda_promedio_ponderada', to: 'demands#calcular_demanda_promedio_ponderada'
   get "up" => "rails/health#show", as: :rails_health_check
 
 end
