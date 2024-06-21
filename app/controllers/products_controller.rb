@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show update destroy ]
+  before_action :set_product, only: %i[show update destroy calculate_eoq calculate_reorder_point calculate_safety_stock]
 
   # GET /products
   def index
@@ -38,14 +38,30 @@ class ProductsController < ApplicationController
     @product.destroy!
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
+  def calculate_eoq
+    Product.calculate_eoq_for_product(params[:id])
+    render json: @product
+  end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.require(:product).permit(:nombreProducto, :descripcionProducto, :precioProveedorProducto, :precioVentaProducto, :category_id, :stock)
-    end
+  def calculate_reorder_point
+    Product.calculate_reorder_point_for_product(params[:id])
+    render json: @product
+  end
+
+  def calculate_safety_stock
+    Product.calculate_safety_stock_for_product(params[:id])
+    render json: @product
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def product_params
+    params.require(:product).permit(:nombreProducto, :descripcionProducto, :precioProveedorProducto, :precioVentaProducto, :category_id, :stock, :order_cost, :holding_cost, :annual_demand)
+  end
 end

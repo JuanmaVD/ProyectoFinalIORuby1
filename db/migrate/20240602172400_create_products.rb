@@ -10,7 +10,14 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.integer :puntoPedido
       t.integer :demandaPM
       t.integer :demandaPMP
+      t.float   :order_cost
+      t.float   :holding_cost
+      t.integer :annual_demand
+      t.float   :eoq
+      t.integer :reorder_point
+      t.integer :safety_stock
       t.references :category, null: true, foreign_key: true
+      t.references :provider, null: true, foreign_key: true
 
       t.timestamps
     end

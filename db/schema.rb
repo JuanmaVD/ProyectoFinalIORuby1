@@ -30,7 +30,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
   create_table "demands", force: :cascade do |t|
     t.integer "demandaReal"
     t.integer "demandaProyectadaPM"
+    t.float "ErrorDemandaProyectadaPM"
     t.integer "demandaProyectadaPMP"
+    t.float "ErrorDemandaProyectadaPMP"
     t.integer "product_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -71,14 +73,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
     t.integer "puntoPedido"
     t.integer "demandaPM"
     t.integer "demandaPMP"
+    t.float "order_cost"
+    t.float "holding_cost"
+    t.integer "annual_demand"
+    t.float "eoq"
+    t.integer "reorder_point"
+    t.integer "safety_stock"
     t.integer "category_id"
+    t.integer "provider_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["provider_id"], name: "index_products_on_provider_id"
   end
 
   create_table "providers", force: :cascade do |t|
     t.string "nombreProveedor"
+    t.integer "lead_time"
+    t.float "z_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -108,6 +120,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
   add_foreign_key "product_sales", "products"
   add_foreign_key "product_sales", "sales"
   add_foreign_key "products", "categories"
+  add_foreign_key "products", "providers"
   add_foreign_key "purchase_orders", "providers"
   add_foreign_key "sales", "clients"
 end
