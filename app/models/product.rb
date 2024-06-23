@@ -6,4 +6,6 @@ class Product < ApplicationRecord
     has_many :purchase_orders, through: :product_purchase_orders
     has_many :product_sales
     has_many :sales, through: :product_sales
+    has_many :product_providers
+    has_many :providers, through: :product_providers
 end

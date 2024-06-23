@@ -3,13 +3,15 @@ class CreateProducts < ActiveRecord::Migration[7.1]
     create_table :products do |t|
       t.string :nombreProducto
       t.string :descripcionProducto
-      t.float :precioProveedorProducto
       t.float :precioVentaProducto
       t.integer :stock
-      t.integer :stockEmergencia
+      t.integer :stockSeguridad
       t.integer :puntoPedido
-      t.integer :demandaPM
-      t.integer :demandaPMP
+      t.integer :cantidadOptimaPedido
+      t.integer :cantidadOrdenesPorAño
+      t.float :costoTotalInventario
+      t.integer :tiempoEntreOrdenes
+      t.float :costoAlmacenamiento
       t.references :category, null: true, foreign_key: true
 
       t.timestamps

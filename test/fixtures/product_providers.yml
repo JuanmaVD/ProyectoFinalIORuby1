@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  PrecioProveedorProducto: 1
+  TiempoEsperaProducto: 1
+  ZValue: 1
+
+two:
+  PrecioProveedorProducto: 1
+  TiempoEsperaProducto: 1
+  ZValue: 1

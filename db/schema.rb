@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_23_140457) do
   create_table "categories", force: :cascade do |t|
     t.string "nombreCategoria"
     t.string "descripcionCategoria"
@@ -35,6 +35,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_demands_on_product_id"
+  end
+
+  create_table "product_providers", force: :cascade do |t|
+    t.float "PrecioProveedorProducto"
+    t.integer "TiempoEsperaProducto"
+    t.float "ZValue"
+    t.integer "provider_id"
+    t.integer "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_providers_on_product_id"
+    t.index ["provider_id"], name: "index_product_providers_on_provider_id"
   end
 
   create_table "product_purchase_orders", force: :cascade do |t|
@@ -64,13 +76,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
   create_table "products", force: :cascade do |t|
     t.string "nombreProducto"
     t.string "descripcionProducto"
-    t.float "precioProveedorProducto"
     t.float "precioVentaProducto"
     t.integer "stock"
-    t.integer "stockEmergencia"
+    t.integer "stockSeguridad"
     t.integer "puntoPedido"
-    t.integer "demandaPM"
-    t.integer "demandaPMP"
+    t.integer "cantidadOptimaPedido"
+    t.integer "cantidadOrdenesPorAño"
+    t.float "costoTotalInventario"
+    t.integer "tiempoEntreOrdenes"
+    t.float "costoAlmacenamiento"
     t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -85,7 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
 
   create_table "purchase_orders", force: :cascade do |t|
     t.float "totalCostoOrdenCompra"
-    t.string "estadoOrdenCompra"
+    t.integer "estadoOrdenCompra"
     t.datetime "fechaEstimadaEntrega"
     t.integer "provider_id"
     t.datetime "created_at", null: false
@@ -95,7 +109,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
 
   create_table "sales", force: :cascade do |t|
     t.float "totalCostoVenta"
-    t.string "estadoVenta"
     t.integer "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -103,6 +116,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_02_195402) do
   end
 
   add_foreign_key "demands", "products"
+  add_foreign_key "product_providers", "products"
+  add_foreign_key "product_providers", "providers"
   add_foreign_key "product_purchase_orders", "products"
   add_foreign_key "product_purchase_orders", "purchase_orders"
   add_foreign_key "product_sales", "products"
