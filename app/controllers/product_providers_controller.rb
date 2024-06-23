@@ -46,6 +46,6 @@ class ProductProvidersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_provider_params
-      params.require(:product_provider).permit(:PrecioProveedorProducto, :TiempoEsperaProducto, :ZValue)
+      params.require(:product_provider).permit(:PrecioProveedorProducto, :TiempoEsperaProducto, :ZValue, :costoPedido, :provider_id, :product_id)
     end
 end
