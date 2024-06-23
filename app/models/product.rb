@@ -8,6 +8,7 @@ class Product < ApplicationRecord
     has_many :sales, through: :product_sales
     has_many :product_providers
     has_many :providers, through: :product_providers
+    after_update :recalculate_cantidad_ordenes_por_ano, if: :saved_change_to_cantidadOptimaPedido?
     def calculate_eoq
         # Obtener las demandas excluyendo la más reciente
         demands_to_consider = demands.order(created_at: :desc).offset(1).limit(12)
@@ -31,5 +32,36 @@ class Product < ApplicationRecord
     
         # Actualizar el campo cantidadOptimaPedido
         update(cantidadOptimaPedido: eoq)
+      end
+      def recalculate_cantidad_ordenes_por_ano
+        # Obtener las demandas de este producto, excluyendo la más reciente
+        demands_to_consider = demands.order(created_at: :desc).offset(1).limit(12)
+    
+        # Verificar que haya al menos 12 demandas para considerar
+        if demands_to_consider.size < 12
+          puts "No hay suficientes demandas para recalcular cantidadOrdenesPorAño. Se encontraron: #{demands_to_consider.size}"
+          return
+        end
+    
+        # Sumar las 12 demandas manualmente
+        total_demand = 0
+        demands_to_consider.each do |demand|
+          total_demand += demand.demandaReal
+        end
+    
+        # Verificar que cantidadOptimaPedido no sea cero
+        if cantidadOptimaPedido == 0
+          puts "Cantidad óptima de pedido es cero, no se puede calcular cantidadOrdenesPorAño"
+          return
+        end
+    
+        # Calcular cantidadOrdenesPorAño usando la fórmula cantidadOrdenesPorAño = total_demand / cantidadOptimaPedido
+        cantidad_ordenes_por_ano = total_demand / cantidadOptimaPedido
+    
+        # Imprimir cantidadOrdenesPorAño para depuración
+        puts "Cantidad de órdenes por año calculada: #{cantidad_ordenes_por_ano}"
+    
+        # Actualizar el campo cantidadOrdenesPorAño
+        update_column(:cantidadOrdenesPorAño, cantidad_ordenes_por_ano)
       end
 end
