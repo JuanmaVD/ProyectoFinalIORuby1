@@ -64,4 +64,37 @@ class Product < ApplicationRecord
         # Actualizar el campo cantidadOrdenesPorAño
         update_column(:cantidadOrdenesPorAño, cantidad_ordenes_por_ano)
       end
+      def calculate_standard_deviation
+        # Obtener las demandas excluyendo la más reciente
+        demands_to_consider = demands.order(created_at: :desc).offset(1)
+        total_demand_count = demands_to_consider.size
+    
+        # Verificar que haya al menos 2 demandas para considerar
+        return if total_demand_count < 2
+    
+        # Convertir las demandas a un array de valores de demandaReal
+        demand_values = demands_to_consider.map(&:demandaReal)
+
+        # Calcular el promedio de las demandas
+        total_demand_sum = demand_values.sum
+        average_demand = total_demand_sum.to_f / total_demand_count
+    
+        # Calcular la sumatoria de (demanda - promedio)^2
+        sum_of_squares = demands_to_consider.reduce(0) do |sum, demand|
+          sum + (demand.demandaReal - average_demand) ** 2
+        end
+    
+        # Calcular la desviación estándar
+        standard_deviation = Math.sqrt(sum_of_squares / (total_demand_count - 1))
+
+        #Imprimir resultados por pantalla
+        puts "Demands to consider: #{demands_to_consider.map(&:demandaReal)}"
+        puts "Total demand count: #{total_demand_count}"
+        puts "sumaDemanda: #{total_demand_sum}"
+        puts "Average demand: #{average_demand}"
+        puts "Sum of squares: #{sum_of_squares}"
+    
+        # Actualizar el campo desviacionEstandar
+        update(desviacionEstandar: standard_deviation)
+      end
 end
