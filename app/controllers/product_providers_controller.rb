@@ -10,7 +10,7 @@ class ProductProvidersController < ApplicationController
 
   # GET /product_providers/1
   def show
-    render json: @product_provider
+    render json: @product_provider.as_json(include: [:product, :provider])
   end
 
   # POST /product_providers

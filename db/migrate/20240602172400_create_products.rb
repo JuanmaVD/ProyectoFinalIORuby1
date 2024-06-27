@@ -12,6 +12,7 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.float :costoTotalInventario
       t.integer :tiempoEntreOrdenes
       t.float :costoAlmacenamiento
+      t.integer :desviacionEstandar
       t.references :category, null: true, foreign_key: true
 
       t.timestamps
