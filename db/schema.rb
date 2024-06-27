@@ -40,8 +40,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_140457) do
   create_table "product_providers", force: :cascade do |t|
     t.float "PrecioProveedorProducto"
     t.integer "TiempoEsperaProducto"
-    t.float "ZValue"
     t.float "costoPedido"
+    t.float "ZValue"
     t.integer "provider_id"
     t.integer "product_id"
     t.datetime "created_at", null: false

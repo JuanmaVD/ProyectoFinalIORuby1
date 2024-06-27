@@ -11,6 +11,7 @@ class Demand < ApplicationRecord
   
   def calculate_product_standard_deviation
     product.calculate_standard_deviation
+    product.calculate_stock_security
   end
 
 end

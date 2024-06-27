@@ -97,4 +97,19 @@ class Product < ApplicationRecord
         # Actualizar el campo desviacionEstandar
         update(desviacionEstandar: standard_deviation)
       end
+      def calculate_stock_security
+        product_provider = product_providers.first
+        return unless product_provider
+
+        z_value = product_provider.ZValue
+        tiempo_espera_producto = product_provider.TiempoEsperaProducto
+        desviacion_estandar = self.desviacionEstandar.nil? ? 0 : self.desviacionEstandar
+        puts "Zvalue: #{z_value}"
+        puts "tiempo_espera: #{tiempo_espera_producto}"
+        puts "deviacion_estandar: #{desviacion_estandar}"
+    
+        stock_seguridad = z_value * desviacion_estandar * tiempo_espera_producto
+    
+        update(stockSeguridad: stock_seguridad)
+      end
 end
