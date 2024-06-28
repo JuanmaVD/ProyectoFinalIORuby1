@@ -9,6 +9,7 @@ class Product < ApplicationRecord
     has_many :product_providers
     has_many :providers, through: :product_providers
     after_update :recalculate_cantidad_ordenes_por_ano, if: :saved_change_to_cantidadOptimaPedido?
+    after_update :check_and_create_purchase_order, if: :stock_less_than_or_equal_to_punto_pedido?
     def calculate_eoq
         # Obtener las demandas excluyendo la más reciente
         demands_to_consider = demands.order(created_at: :desc).offset(1).limit(12)
@@ -187,4 +188,29 @@ class Product < ApplicationRecord
         # Actualizar el campo tiempoEntreOrdenes en el producto
         update(tiempoEntreOrdenes: tiempo_entre_ordenes)
       end
+      private
+
+  def stock_less_than_or_equal_to_punto_pedido?
+    stock <= puntoPedido
+  end
+
+  def check_and_create_purchase_order
+    # Obtener el último proveedor creado
+    provider = Provider.last
+
+    # Crear la orden de compra en estado 'en preparación'
+    purchase_order = PurchaseOrder.create!(
+      totalCostoOrdenCompra: cantidadOptimaPedido * costoGestionInventario,
+      estadoOrdenCompra: :preparando,
+      provider: provider
+    )
+
+    # Crear la relación entre el producto y la orden de compra
+    product_purchase_orders.create!(
+      totalCostoOrdenCompraProducto: costoGestionInventario,
+      cantOrdenCompraProducto: cantidadOptimaPedido,
+      subTotalCostoOrdenCompraProducto: cantidadOptimaPedido * costoGestionInventario,
+      purchase_order: purchase_order
+    )
+  end
 end
