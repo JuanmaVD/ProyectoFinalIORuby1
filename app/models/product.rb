@@ -188,29 +188,31 @@ class Product < ApplicationRecord
         # Actualizar el campo tiempoEntreOrdenes en el producto
         update(tiempoEntreOrdenes: tiempo_entre_ordenes)
       end
-      private
+      
 
       def stock_less_than_or_equal_to_punto_pedido?
         puntoPedido.present? && stock.to_i <= puntoPedido.to_i
       end
 
-  def check_and_create_purchase_order
-    # Obtener el último proveedor creado
-    provider = Provider.last
+      def check_and_create_purchase_order
+      # Obtener el último proveedor creado
+      provider = Provider.last
+      product_provider = product_providers.where(provider: provider).last
 
-    # Crear la orden de compra en estado 'en preparación'
-    purchase_order = PurchaseOrder.create!(
-      totalCostoOrdenCompra: cantidadOptimaPedido * costoGestionInventario,
-      estadoOrdenCompra: :preparando,
-      provider: provider
-    )
+      # Crear la orden de compra en estado 'en preparación'
+      purchase_order = PurchaseOrder.create!(
+        totalCostoOrdenCompra: cantidadOptimaPedido * costoGestionInventario,
+        estadoOrdenCompra: :preparando,
+        provider: provider
+      )
 
-    # Crear la relación entre el producto y la orden de compra
-    product_purchase_orders.create!(
-      totalCostoOrdenCompraProducto: costoGestionInventario,
-      cantOrdenCompraProducto: cantidadOptimaPedido,
-      subTotalCostoOrdenCompraProducto: cantidadOptimaPedido * costoGestionInventario,
-      purchase_order: purchase_order
-    )
-  end
+      # Crear la relación entre el producto y la orden de compra
+      product_purchase_orders.create!(
+        totalCostoOrdenCompraProducto: cantidadOptimaPedido * product_provider.PrecioProveedorProducto,
+        cantOrdenCompraProducto: cantidadOptimaPedido,
+        subTotalCostoOrdenCompraProducto: product_provider.PrecioProveedorProducto,
+        purchase_order: purchase_order
+      )
+      purchase_order.update_total_costo_orden_compra
+      end
 end

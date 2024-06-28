@@ -5,7 +5,7 @@ class PurchaseOrder < ApplicationRecord
     enum estadoOrdenCompra: {pedido: 0, preparando: 1, en_camino: 2, entregado: 3}
     after_update :update_product_stock, if: :saved_change_to_estadoOrdenCompra? 
 
-  private
+  
 
   def update_product_stock
     if entregado?
@@ -15,4 +15,10 @@ class PurchaseOrder < ApplicationRecord
       end
     end
   end
+
+  def update_total_costo_orden_compra
+    total_costo = product_purchase_orders.sum(:totalCostoOrdenCompraProducto)
+    update(totalCostoOrdenCompra: total_costo)
+  end
+
 end
