@@ -50,7 +50,7 @@ class DemandsController < ApplicationController
     end
   
     last_n_demands = Demand.find_by_sql([
-      "SELECT demandaReal FROM demands WHERE product_id = ? ORDER BY created_at DESC LIMIT ?", product, n
+      "SELECT demandaReal FROM demands WHERE product_id = ? ORDER BY created_at DESC LIMIT ? OFFSET 1", product, n
     ])
     
     # Asegurarse de que se encontraron demandas
@@ -78,7 +78,7 @@ class DemandsController < ApplicationController
     end
 
     last_n_demands = Demand.find_by_sql([
-      "SELECT demandaReal FROM demands WHERE product_id = ? ORDER BY created_at DESC LIMIT ?", product, n
+      "SELECT demandaReal FROM demands WHERE product_id = ? ORDER BY created_at DESC LIMIT ? OFFSET 1", product, n
     ])
     
     weighted_sum = last_n_demands.each_with_index.reduce(0) do |sum, (demand, index)|
