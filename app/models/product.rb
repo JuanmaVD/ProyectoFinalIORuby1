@@ -176,7 +176,7 @@ class Product < ApplicationRecord
         end
     
         # Verificar que cantidadOptimaPedido no sea cero para evitar división por cero
-        if cantidadOptimaPedido.to_i != 0
+        if cantidadOptimaPedido.to_i != 0 && demanda_anual_producto != 0
           tiempo_entre_ordenes = demanda_anual_producto / self.cantidadOptimaPedido
         else
           tiempo_entre_ordenes = 0
