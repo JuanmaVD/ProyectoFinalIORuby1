@@ -112,4 +112,79 @@ class Product < ApplicationRecord
     
         update(stockSeguridad: stock_seguridad)
       end
+      def calculate_reorder_point
+        product_provider = product_providers.first
+        return unless product_provider
+    
+        tiempo_espera_producto = product_provider.TiempoEsperaProducto
+    
+        last_demand = demands.order(created_at: :desc).first
+        demanda_proyectada_ultimo_mes = last_demand.demandaProyectadaPM || last_demand.demandaProyectadaPMP || 0
+    
+        stock_seguridad = self.stockSeguridad || 0
+
+        puts "TiempoEspera: #{tiempo_espera_producto}"
+        puts "UltimaDemanda: #{demanda_proyectada_ultimo_mes}"
+        puts "stockSeguridad: #{stock_seguridad}"
+    
+        reorder_point = demanda_proyectada_ultimo_mes + tiempo_espera_producto + stock_seguridad
+    
+        update(puntoPedido: reorder_point)
+      end
+      def calculate_inventory_management_cost
+        product_provider = product_providers.first
+        return unless product_provider
+    
+        precio_proveedor_producto = product_provider.PrecioProveedorProducto
+        costo_pedido = product_provider.costoPedido
+    
+        # Obtener las últimas 12 demandas excluyendo la más reciente
+        demands_to_consider = demands.order(created_at: :desc).offset(1).limit(12)
+        demanda_anual_producto = demands_to_consider.sum(:demandaReal)
+
+        # Si la suma da 0, intenta calcularla de otra forma
+        if demanda_anual_producto.zero?
+          demanda_anual_producto = demands_to_consider.inject(0) { |sum, demand| sum + demand.demandaReal.to_i }
+        end
+    
+        costo_compra = precio_proveedor_producto * demanda_anual_producto
+        costo_almacenamiento = self.costoAlmacenamiento * self.stock
+        costo_pedido_total = costo_pedido * (demanda_anual_producto.to_f / self.stock)
+    
+        costo_gestion_inventario = costo_compra + costo_almacenamiento + costo_pedido_total
+
+        puts "Precio Proveedor Producto: #{precio_proveedor_producto}"
+        puts "Costo Pedido: #{costo_pedido}"
+        puts "Demands to Consider: #{demands_to_consider.map(&:demandaReal)}"
+        puts "Demanda Anual Producto: #{demanda_anual_producto}"
+        puts "Costo Compra: #{costo_compra}"
+        puts "Costo Almacenamiento: #{costo_almacenamiento}"
+        puts "Costo Pedido Total: #{costo_pedido_total}"
+        puts "stock: #{self.stock}"
+    
+        update(costoGestionInventario: costo_gestion_inventario)
+      end
+      def calculate_tiempo_entre_ordenes
+        # Obtener las últimas 12 demandas excluyendo la más reciente
+        demands_to_consider = demands.order(created_at: :desc).offset(1).limit(12)
+        demanda_anual_producto = demands_to_consider.sum(:demandaReal)
+
+        # Si la suma da 0, intenta calcularla de otra forma
+        if demanda_anual_producto.zero?
+          demanda_anual_producto = demands_to_consider.inject(0) { |sum, demand| sum + demand.demandaReal.to_i }
+        end
+    
+        # Verificar que cantidadOptimaPedido no sea cero para evitar división por cero
+        if cantidadOptimaPedido.to_i != 0
+          tiempo_entre_ordenes = demanda_anual_producto / self.cantidadOptimaPedido
+        else
+          tiempo_entre_ordenes = 0
+        end
+
+        puts "Demanda anual del producto: #{demanda_anual_producto}"
+        puts "Cantidad óptima de pedido: #{self.cantidadOptimaPedido}"
+    
+        # Actualizar el campo tiempoEntreOrdenes en el producto
+        update(tiempoEntreOrdenes: tiempo_entre_ordenes)
+      end
 end

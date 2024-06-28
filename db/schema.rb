@@ -83,7 +83,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_23_140457) do
     t.integer "puntoPedido"
     t.integer "cantidadOptimaPedido"
     t.integer "cantidadOrdenesPorAño"
-    t.float "costoTotalInventario"
+    t.float "costoGestionInventario"
     t.integer "tiempoEntreOrdenes"
     t.float "costoAlmacenamiento"
     t.float "desviacionEstandar"

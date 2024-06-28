@@ -9,7 +9,7 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.integer :puntoPedido
       t.integer :cantidadOptimaPedido
       t.integer :cantidadOrdenesPorAño
-      t.float :costoTotalInventario
+      t.float :costoGestionInventario
       t.integer :tiempoEntreOrdenes
       t.float :costoAlmacenamiento
       t.float :desviacionEstandar
