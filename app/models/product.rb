@@ -190,9 +190,9 @@ class Product < ApplicationRecord
       end
       private
 
-  def stock_less_than_or_equal_to_punto_pedido?
-    stock <= puntoPedido
-  end
+      def stock_less_than_or_equal_to_punto_pedido?
+        puntoPedido.present? && stock.to_i <= puntoPedido.to_i
+      end
 
   def check_and_create_purchase_order
     # Obtener el último proveedor creado
